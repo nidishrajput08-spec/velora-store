@@ -1,20 +1,29 @@
-# VELORA — Dark Luxury 3D Store
+# VELORA Full Store
 
-Starter storefront for a fashion-accessories dropshipping brand.
+## What is included
+- Next.js dark-luxury storefront
+- Empty catalog (no fake products)
+- SQLite + Prisma product database
+- Private admin login using an email allowlist + signed HTTP-only cookie
+- Admin add/edit/delete product CRUD
+- Server-side Razorpay order creation
+- Server-side Razorpay signature verification endpoint
+- Responsive storefront
 
-## Run
-1. Install Node.js 20+.
-2. Run `npm install`.
-3. Copy `.env.example` to `.env.local`.
-4. Put your own admin email in `ADMIN_EMAIL`.
-5. Run `npm run dev`.
-6. Open http://localhost:3000
+## Local setup
+Install Node.js 20+.
+1. `npm install`
+2. Copy `.env.example` to `.env.local`
+3. Set `ADMIN_EMAIL` to your email and create a long random `ADMIN_SESSION_SECRET`.
+4. Keep Razorpay secret values private. Add your Razorpay credentials to `.env.local` only.
+5. `npx prisma generate`
+6. `npx prisma migrate dev --name init`
+7. `npm run dev`
+8. Open `http://localhost:3000`
+9. Open `http://localhost:3000/admin`
 
-## Production security
-The `/admin` page in this starter is a visual shell only. Before taking real orders, add server-side authentication and a database. Do not protect an admin route with a frontend-only email check.
+## Important payment note
+The included Razorpay API routes are the secure server-side foundation. A production checkout should also create an Order record before payment, verify the payment, update the Order to PAID, and use webhooks for reconciliation. Do not expose `RAZORPAY_KEY_SECRET` in browser code.
 
-## Razorpay
-Never expose `RAZORPAY_KEY_SECRET` to the browser. Create Razorpay orders server-side and verify payment signatures server-side. Use live credentials only in your deployment environment.
-
-## No products included
-The storefront intentionally contains no sample products. The production admin should write products to the database so additions/deletions automatically update the shop.
+## Production
+SQLite is fine for local development but use a hosted PostgreSQL database for production. Deploy on a Node-compatible host. Add all environment variables in the host dashboard, run Prisma migrations during deployment, and use HTTPS.
